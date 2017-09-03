@@ -6,6 +6,7 @@ This extension adds Yelp reviews and quickly accessible links to Caviar restaura
 
 * Yelp OAuth, api to grab token dynamically, and cache token
 * remove hardcoded location in yelp search api
+* better CSS, fix half-stars
 * remove dead, unneeded code
 * refactoring
 
