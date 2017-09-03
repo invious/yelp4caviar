@@ -1,6 +1,6 @@
 # Yelp4Caviar
 
-This extension adds Yelp reviews and quickly accessible links to yelp pages.
+This extension adds Yelp reviews and quickly accessible links to Caviar restaurant listings.
 
 ## Todo
 
