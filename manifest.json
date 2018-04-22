@@ -1,8 +1,8 @@
 {
   "name": "Yelp4Caviar",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "manifest_version": 2,
-  "description": "Adds Yelp reviews to Cavair restaurant listings",
+  "description": "Adds Yelp reviews to Caviar restaurant listings",
   "homepage_url": "https://github.com/invious",
   "icons": {
     "16": "icons/icon16.png",

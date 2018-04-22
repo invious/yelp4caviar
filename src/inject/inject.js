@@ -1,6 +1,6 @@
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
 
-function getYelp(storeName) {
+function getYelp(storeName, city) {
     var deferred = $.Deferred();
 
     var xhr = new XMLHttpRequest();
@@ -18,7 +18,7 @@ function getYelp(storeName) {
         }
     });
 
-    xhr.open("GET", "https://api.yelp.com/v3/businesses/search?term=" + encodeURIComponent(storeName) + "&location=20002");
+    xhr.open("GET", "https://api.yelp.com/v3/businesses/search?term=" + encodeURIComponent(storeName) + "&location=" + city);
     xhr.setRequestHeader("authorization", "Bearer a3yncN811ps7NidlZndPlw173dregZeY4VI6a2YtHcBaTF_3U9Z435Un4KbFSsFKh5tprPLi5tNyuTZViCpooHwUWwPQqCeYZ1hftiH3gyqoeMCvwv-JAP1NgkqrWXYx");
     xhr.setRequestHeader("cache-control", "no-cache");
 
@@ -35,22 +35,32 @@ async function asyncForEach(array, callback) {
 }   
 
 async function main(){
-    console.log("dfgdfg");
+    try {
+        city = $($.find('head > meta:nth-child(25)')[0])[0].baseURI.match(/com\/(.+?$)/)[1]
+    } catch (error) {
+        city = ''
+    }
 
     await asyncForEach($($.find('.merchant-tile_name')), async (el) =>  {
-        await waitFor(200)
+        await waitFor(200);
     	var context = $(el);
         var storeNameHeader = $(el).closest('h4');
         var storeName = storeNameHeader.text();
-        var business = getYelp(storeName);
+        var business = getYelp(storeName, city);
         business.done(function (b) {
-        	var rating = b.rating;
-        	var url = b.url;
-        	var numEmpty = 5 - rating;
+          try {
+          	var rating = b.rating;
+          	var url = b.url;
+          	var numEmpty = 5 - rating;
 
-        	starsHTML = '<div class="star"><i class="star-filled"></i></div>'.repeat(rating);
-        	starsHTML = rating === Math.floor(rating) ? starsHTML : starsHTML + '<div class="star"><i class="star-half"></i></div>';
-        	context.closest('h4').append('<span style="float:right">' + b.price + '</span><a href="' + url + '"><span class="rating star-icon direction-ltr label-right value-' + Math.floor(rating) + ' color-default"><div class="label-value">'+ rating + '</div><div class="star-container">'+ starsHTML +'</div></span></a>');
+          	starsHTML = '<div class="star"><i class="star-filled"></i></div>'.repeat(rating);
+          	starsHTML = rating === Math.floor(rating) ? starsHTML : starsHTML + '<div class="star"><i class="star-half"></i></div>';
+          	context.closest('h4').append('<span style="float:right">' + b.price + '</span><a href="' + url + '"><span class="rating star-icon direction-ltr label-right value-' + Math.floor(rating) + ' color-default"><div class="label-value">'+ rating + '</div><div class="star-container">'+ starsHTML +'</div></span></a>');
+          } catch(error){
+            console.log(error)
+            console.log(b)
+          }
+
         });
     });
 
@@ -60,11 +70,6 @@ chrome.extension.sendMessage({}, function(response) {
 	var readyStateCheckInterval = setInterval(function() {
 	if (document.readyState === "complete") {
 		clearInterval(readyStateCheckInterval);
-
-		// ----------------------------------------------------------
-		// This part of the script triggers when page is done loading
-		console.log("Hello. This message was sent from scripts/inject.js");
-		// ----------------------------------------------------------
 		main();
 
 
