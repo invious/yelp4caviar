@@ -1,5 +1,3 @@
-const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
-
 function getYelp(storeName) {
     var deferred = $.Deferred();
 
@@ -28,29 +26,20 @@ function getYelp(storeName) {
 }
 
 
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array)
-  }
-}   
+function main(){
+    console.log("Aymon");
 
-async function main(){
-    console.log("dfgdfg");
-
-    await asyncForEach($($.find('.merchant-tile_name')), async (el) =>  {
-        await waitFor(200)
-    	var context = $(el);
-        var storeNameHeader = $(el).closest('h4');
-        var storeName = storeNameHeader.text();
-        var business = getYelp(storeName);
+    $($.find('.list_item')).each(function (i,e) {
+    	var context = $(this);
+        var movieNameLink = $(this).closest('h4');
+        var movieName = storeNameHeader.text();
+        var movie = getMovie(storeName);
         business.done(function (b) {
         	var rating = b.rating;
         	var url = b.url;
         	var numEmpty = 5 - rating;
 
-        	starsHTML = '<div class="star"><i class="star-filled"></i></div>'.repeat(rating);
-        	starsHTML = rating === Math.floor(rating) ? starsHTML : starsHTML + '<div class="star"><i class="star-half"></i></div>';
-        	context.closest('h4').append('<span style="float:right">' + b.price + '</span><a href="' + url + '"><span class="rating star-icon direction-ltr label-right value-' + Math.floor(rating) + ' color-default"><div class="label-value">'+ rating + '</div><div class="star-container">'+ starsHTML +'</div></span></a>');
+        	context.find('.rating-rating > span.grey')[0].append(' ' + rating);
         });
     });
 
